@@ -101,3 +101,21 @@ t13x13Res([
              [(x,19)  , 9      , 2      , 8      , x      , (x,11) , 2      , 9      , x      , x      , x      , x      , x      ],
              [(x,17)  , 7      , 1      , 9      , x      , x      , x      , x      , x      , x      , x      , x      , x      ]
         ]).
+        
+
+indicaX(Res):- random(1,5,Res).
+sacaNumero(Res):- random(1,10,Res).
+
+creaLista(NumeroCasillas, Res):- Lista = [], creaListaAux(Lista,NumeroCasillas,X),append(Lista,X,Res), !.
+creaListaAux(Lista,Ncasillas,Res):- Ncasillas == 0,Res = Lista, !.
+creaListaAux(Lista,Ncasillas,Res):- indicaX(X), X == 1, append(Lista,[x],ListaNueva), N is Ncasillas-1, creaListaAux(ListaNueva,N,Res).
+creaListaAux(Lista,Ncasillas,Res):- append(Lista,[o],ListaNueva), N is Ncasillas-1, creaListaAux(ListaNueva,N,Res).
+
+creaMatriz(NumeroFilas,NumeroColumnas,Res):- Matriz = [], creaMatrizAux(Matriz,NumeroFilas,NumeroColumnas,X),append(Matriz,X,Res),!.
+creaMatrizAux(Matriz,NumeroFilas,NumeroColumnas,Res):- NumeroFilas == 0, Res = Matriz, !.
+creaMatrizAux(Matriz,NumeroFilas,NumeroColumnas,Res):- creaLista(NumeroColumnas, X),meteNumeros(X,Y), append(Matriz,[Y],MatrizNueva), N is NumeroFilas-1, creaMatrizAux(MatrizNueva,N,NumeroColumnas,Res).
+
+meteNumeros(Lista,Res):-ListaNueva = [], meteNumerosAux(ListaNueva,Lista,X),append(ListaNueva,X,Res),!.
+meteNumerosAux(Lista,[],Res):- Res = Lista,!.
+meteNumerosAux(Lista,[H|T],Res):- H == x, append(Lista,[x],ListaNueva), meteNumerosAux(ListaNueva,T,Res).
+meteNumerosAux(Lista,[H|T],Res):- sacaNumero(X),append(Lista,[X],ListaNueva), meteNumerosAux(ListaNueva,T,Res).
