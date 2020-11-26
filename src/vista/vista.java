@@ -17,9 +17,8 @@ import java.util.*;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.table.TableModel;
-import org.jpl7.Atom;
-import org.jpl7.Compound;
-import org.jpl7.Term;
+import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 /**
  *
@@ -32,6 +31,7 @@ public class vista extends javax.swing.JFrame {
      */
     public vista() {
         initComponents();
+        t = new Timer(10, acciones);
     }
 
     /**
@@ -49,7 +49,7 @@ public class vista extends javax.swing.JFrame {
         boton_limpiar_tablero = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabla_principal = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
+        etiqueta_inserta = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla_inserta_coordenadas = new javax.swing.JTable();
         boton_inserta_coordenadas = new javax.swing.JButton();
@@ -60,6 +60,12 @@ public class vista extends javax.swing.JFrame {
         boton_verificar = new javax.swing.JButton();
         num_sugerencias = new javax.swing.JTextField();
         boton_sugerencias = new javax.swing.JButton();
+        boton_solucion = new javax.swing.JButton();
+        text_errores = new javax.swing.JTextField();
+        num_errores = new javax.swing.JTextField();
+        text_vacios = new javax.swing.JTextField();
+        num_vacios = new javax.swing.JTextField();
+        etiquetaTiempo = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -71,7 +77,7 @@ public class vista extends javax.swing.JFrame {
                 boton_kakuro_9x9ActionPerformed(evt);
             }
         });
-        getContentPane().add(boton_kakuro_9x9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 150, -1));
+        getContentPane().add(boton_kakuro_9x9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 150, -1));
 
         boton_limpiar_tablero.setText("Limpiar Tablero");
         boton_limpiar_tablero.addActionListener(new java.awt.event.ActionListener() {
@@ -105,12 +111,12 @@ public class vista extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tabla_principal);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 10, 690, 570));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 10, 690, 570));
 
-        jLabel1.setBackground(new java.awt.Color(204, 204, 204));
-        jLabel1.setForeground(java.awt.Color.white);
-        jLabel1.setText("Insertar Valor por Coordenadas");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, 210, 20));
+        etiqueta_inserta.setBackground(new java.awt.Color(204, 204, 204));
+        etiqueta_inserta.setForeground(java.awt.Color.white);
+        etiqueta_inserta.setText("Insertar Valor por Coordenadas");
+        getContentPane().add(etiqueta_inserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, 210, 20));
 
         tabla_inserta_coordenadas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -158,7 +164,7 @@ public class vista extends javax.swing.JFrame {
                 boton_inserta_coordenadasActionPerformed(evt);
             }
         });
-        getContentPane().add(boton_inserta_coordenadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, -1, -1));
+        getContentPane().add(boton_inserta_coordenadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, -1, -1));
 
         boton_kakuro_13x13.setText("Generar Kakuro 13x13");
         boton_kakuro_13x13.addActionListener(new java.awt.event.ActionListener() {
@@ -174,7 +180,7 @@ public class vista extends javax.swing.JFrame {
                 boton_kakuro_3x3ActionPerformed(evt);
             }
         });
-        getContentPane().add(boton_kakuro_3x3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 150, -1));
+        getContentPane().add(boton_kakuro_3x3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 150, -1));
 
         boton_kakuro_4x4.setText("Generar Kakuro 4x4");
         boton_kakuro_4x4.addActionListener(new java.awt.event.ActionListener() {
@@ -182,7 +188,7 @@ public class vista extends javax.swing.JFrame {
                 boton_kakuro_4x4ActionPerformed(evt);
             }
         });
-        getContentPane().add(boton_kakuro_4x4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 150, -1));
+        getContentPane().add(boton_kakuro_4x4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 150, -1));
 
         boton_kakuro_5x5.setText("Generar Kakuro 5x5");
         boton_kakuro_5x5.addActionListener(new java.awt.event.ActionListener() {
@@ -190,7 +196,7 @@ public class vista extends javax.swing.JFrame {
                 boton_kakuro_5x5ActionPerformed(evt);
             }
         });
-        getContentPane().add(boton_kakuro_5x5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 150, -1));
+        getContentPane().add(boton_kakuro_5x5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 150, -1));
 
         boton_verificar.setText("Verificar");
         boton_verificar.addActionListener(new java.awt.event.ActionListener() {
@@ -217,14 +223,49 @@ public class vista extends javax.swing.JFrame {
         });
         getContentPane().add(boton_sugerencias, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 450, -1, -1));
 
+        boton_solucion.setText("Ver Solución");
+        boton_solucion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_solucionActionPerformed(evt);
+            }
+        });
+        getContentPane().add(boton_solucion, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 490, 150, -1));
+
+        text_errores.setEditable(false);
+        text_errores.setText("Cantidad de Errores");
+        text_errores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                text_erroresActionPerformed(evt);
+            }
+        });
+        getContentPane().add(text_errores, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 20, 130, 30));
+
+        num_errores.setEditable(false);
+        getContentPane().add(num_errores, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 20, 30, 30));
+
+        text_vacios.setEditable(false);
+        text_vacios.setText("Cantidad de Espacios Vacíos");
+        getContentPane().add(text_vacios, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 60, 180, 30));
+
+        num_vacios.setEditable(false);
+        getContentPane().add(num_vacios, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 60, 30, 30));
+
+        etiquetaTiempo.setBackground(new java.awt.Color(255, 255, 255));
+        etiquetaTiempo.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        etiquetaTiempo.setText("00:00:00:00");
+        etiquetaTiempo.setToolTipText("");
+        getContentPane().add(etiquetaTiempo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 530, 140, 40));
+
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo.png"))); // NOI18N
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1100, 600));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1130, 610));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void boton_limpiar_tableroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_limpiar_tableroActionPerformed
-
+        t.start();
+        h=0; m=0; s=0; cs=0;
+        actualizarLabel();
         if(tabla_principal.getRowCount() == 9){
             
             int n=9;
@@ -263,7 +304,7 @@ public class vista extends javax.swing.JFrame {
        
         }
     }//GEN-LAST:event_boton_limpiar_tableroActionPerformed
- public int num=5;
+    private int num=5;
     private void tabla_principalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabla_principalMouseClicked
         // TODO add your handling code here:
         int row = tabla_principal.getSelectedRow();
@@ -372,6 +413,13 @@ public class vista extends javax.swing.JFrame {
         this.mostrarMatriz(tablero, n);
         num=5;
         num_sugerencias.setText("(5)");
+        num_errores.setText(" ");
+        num_vacios.setText(" ");
+        h=0; m=0; s=0; cs=0;
+        actualizarLabel();
+        t.start();
+
+        
     }//GEN-LAST:event_boton_kakuro_9x9ActionPerformed
 
     private void tabla_inserta_coordenadasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabla_inserta_coordenadasMouseClicked
@@ -483,6 +531,11 @@ public class vista extends javax.swing.JFrame {
         this.mostrarMatriz(tablero, n);
         num=5;
         num_sugerencias.setText("(5)");
+        num_errores.setText(" ");
+        num_vacios.setText(" ");
+        h=0; m=0; s=0; cs=0;
+        actualizarLabel();
+        t.start();
     }//GEN-LAST:event_boton_kakuro_4x4ActionPerformed
    
     private void boton_kakuro_3x3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_3x3ActionPerformed
@@ -492,6 +545,11 @@ public class vista extends javax.swing.JFrame {
         this.mostrarMatriz(tablero, n);
         num=5;
         num_sugerencias.setText("(5)");
+        num_errores.setText(" ");
+        num_vacios.setText(" ");
+        h=0; m=0; s=0; cs=0;
+        actualizarLabel();
+        t.start();
     }//GEN-LAST:event_boton_kakuro_3x3ActionPerformed
 
     private void boton_kakuro_5x5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_5x5ActionPerformed
@@ -501,6 +559,11 @@ public class vista extends javax.swing.JFrame {
         this.mostrarMatriz(tablero, n);
         num=5;
         num_sugerencias.setText("(5)");
+        num_errores.setText(" ");
+        num_vacios.setText(" ");
+        h=0; m=0; s=0; cs=0;
+        actualizarLabel();
+        t.start();
     }//GEN-LAST:event_boton_kakuro_5x5ActionPerformed
 
     private void boton_kakuro_13x13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_13x13ActionPerformed
@@ -510,13 +573,36 @@ public class vista extends javax.swing.JFrame {
         this.mostrarMatriz(tablero, n);
         num=5;
         num_sugerencias.setText("(5)");
+        num_errores.setText(" ");
+        num_vacios.setText(" ");
+        h=0; m=0; s=0; cs=0;
+        actualizarLabel();
+        t.start();
     }//GEN-LAST:event_boton_kakuro_13x13ActionPerformed
 
     private void boton_verificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_verificarActionPerformed
+        System.out.println(tabla_principal.getValueAt(3, 3));
+        String t1= "consult('board.pl')";
+        Query q1= new Query(t1);
+        System.out.println(t1+""+(q1.hasSolution()? "satisfactoria":"insatisfactoria"));
         
-        Term goal = new Compound("verifica1", new Term[] {new Atom(Arrays.deepToString(this.verificar_solucion(1)))});
-        Query q= new Query(goal);
-        System.out.println(q);
+        String matricita= Arrays.deepToString(this.verificar_solucion(1));
+        String revisa_vacios="revisaMatrizVacios("+matricita+",Res)";
+        Query q2 = new Query(revisa_vacios);
+        String vacios = q2.oneSolution().get("Res").toString();
+        num_vacios.setText(vacios);
+        
+        String revisa_incorrectos="enviadorRevisaMatriz("+matricita+",Res2)";
+        Query q3 = new Query(revisa_incorrectos);
+        String incorrectos = q3.oneSolution().get("Res2").toString();
+        num_errores.setText(incorrectos);
+        
+        if (vacios.equals("0") && incorrectos.equals("0")){
+            t.stop();
+            JOptionPane.showMessageDialog(null,"Felicidades!! Juego Completado");
+
+        }
+
     }//GEN-LAST:event_boton_verificarActionPerformed
 
     private void num_sugerenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_num_sugerenciasActionPerformed
@@ -682,6 +768,54 @@ public class vista extends javax.swing.JFrame {
 
     
     }//GEN-LAST:event_boton_sugerenciasActionPerformed
+
+    private void boton_solucionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_solucionActionPerformed
+        
+        int cantidad_matriz=tabla_principal.getColumnCount();
+                if (cantidad_matriz == 9){
+                
+                    int n=9;
+                    String [][] tablero= new String[n][n];
+                    tablero=this.matrizProlog9x9_res();
+                    this.mostrarMatriz(tablero, n);
+                   
+                }
+                if (cantidad_matriz == 3){
+                    int n=3;
+                    String [][] tablero= new String[n][n];
+                    tablero=this.matrizProlog3x3_res();
+                    this.mostrarMatriz(tablero, n);
+
+                }
+                if (cantidad_matriz == 4){
+                    
+                    int n=3;
+                    String [][] tablero= new String[n][n];
+                    tablero=this.matrizProlog4x4_res();
+                    this.mostrarMatriz(tablero, n);
+                }
+                if (cantidad_matriz == 5){
+                
+                    int n=5;
+                    String [][] tablero= new String[n][n];
+                    tablero=this.matrizProlog5x5_res();
+                    this.mostrarMatriz(tablero, n);
+
+                }
+                if (cantidad_matriz == 13){
+                    
+                    int n=13;
+                    String [][] tablero= new String[n][n];
+                    tablero=this.matrizProlog13x13_res();
+                    this.mostrarMatriz(tablero, n);
+
+
+                }
+    }//GEN-LAST:event_boton_solucionActionPerformed
+
+    private void text_erroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text_erroresActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_text_erroresActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1471,8 +1605,37 @@ public class vista extends javax.swing.JFrame {
             }
             
         }
+      
+    private Timer t;
+    private int h, m, s, cs;
+    private ActionListener acciones = new ActionListener(){
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            ++cs; 
+            if(cs==100){
+                cs = 0;
+                ++s;
+            }
+            if(s==60) 
+            {
+                s = 0;
+                ++m;
+            }
+            if(m==60)
+            {
+                m = 0;
+                ++h;
+            }
+            actualizarLabel();
+        }
         
-        
+    };
+    
+    private void actualizarLabel() {
+        String tiempo = (h<=9?"0":"")+h+":"+(m<=9?"0":"")+m+":"+(s<=9?"0":"")+s+":"+(cs<=9?"0":"")+cs;
+        etiquetaTiempo.setText(tiempo);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton boton_inserta_coordenadas;
     private javax.swing.JButton boton_kakuro_13x13;
@@ -1481,14 +1644,20 @@ public class vista extends javax.swing.JFrame {
     private javax.swing.JButton boton_kakuro_5x5;
     private javax.swing.JButton boton_kakuro_9x9;
     private javax.swing.JButton boton_limpiar_tablero;
+    private javax.swing.JButton boton_solucion;
     private javax.swing.JButton boton_sugerencias;
     private javax.swing.JButton boton_verificar;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel etiquetaTiempo;
+    private javax.swing.JLabel etiqueta_inserta;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField num_errores;
     private javax.swing.JTextField num_sugerencias;
+    private javax.swing.JTextField num_vacios;
     private javax.swing.JTable tabla_inserta_coordenadas;
     private javax.swing.JTable tabla_principal;
+    private javax.swing.JTextField text_errores;
+    private javax.swing.JTextField text_vacios;
     // End of variables declaration//GEN-END:variables
 }
