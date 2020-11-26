@@ -119,3 +119,39 @@ meteNumeros(Lista,Res):-ListaNueva = [], meteNumerosAux(ListaNueva,Lista,X),appe
 meteNumerosAux(Lista,[],Res):- Res = Lista,!.
 meteNumerosAux(Lista,[H|T],Res):- H == x, append(Lista,[x],ListaNueva), meteNumerosAux(ListaNueva,T,Res).
 meteNumerosAux(Lista,[H|T],Res):- sacaNumero(X),append(Lista,[X],ListaNueva), meteNumerosAux(ListaNueva,T,Res).
+
+%para revisar matriz
+revisaListaVacios(Lista,Res):- X = 0, revisaListaVaciosAux(Lista,X,Y), Res = Y,!.
+revisaListaVaciosAux([],Contador,Res):- Res = Contador,!.
+revisaListaVaciosAux([H|T],Contador,Res):- H == o, ContadorNuevo is Contador + 1, revisaListaVaciosAux(T,ContadorNuevo,Res).
+revisaListaVaciosAux([H|T],Contador,Res):- revisaListaVaciosAux(T,Contador,Res).
+
+%este debe ser llamado para contar faltantes
+revisaMatrizVacios(Matriz,Res):- X = 0, revisaMatrizVaciosAux(Matriz,X,Y), Res = Y,!.
+revisaMatrizVaciosAux([],Contador,Res):- Res = Contador,!.
+revisaMatrizVaciosAux([H|T],Contador,Res):- revisaListaVacios(H,X), ContadorNuevo is Contador + X, revisaMatrizVaciosAux(T,ContadorNuevo,Res).
+
+revisaListaIncorrectos(ListaR,ListaA,Res):- X = 0, revisaListaIncorrectosAux(ListaR,ListaA,X,Y), Res = Y,!.
+revisaListaIncorrectosAux([],[],Contador,Res):- Res = Contador,!.
+revisaListaIncorrectosAux([HR|TR],[HA|TA],Contador,Res):- HR == x, revisaListaIncorrectosAux(TR,TA,Contador,Res).
+revisaListaIncorrectosAux([HR|TR],[HA|TA],Contador,Res):- HR == (A,B), revisaListaIncorrectosAux(TR,TA,Contador,Res).
+revisaListaIncorrectosAux([HR|TR],[HA|TA],Contador,Res):- HR == o, revisaListaIncorrectosAux(TR,TA,Contador,Res).
+revisaListaIncorrectosAux([HR|TR],[HA|TA],Contador,Res):- HR == HA, revisaListaIncorrectosAux(TR,TA,Contador,Res).
+revisaListaIncorrectosAux([HR|TR],[HA|TA],Contador,Res):- ContadorNuevo is Contador + 1, revisaListaIncorrectosAux(TR,TA,ContadorNuevo,Res).
+
+revisaMatrizIncorrectos(MatrizR,MatrizA,Res):- X = 0, revisaMatrizIncorrectosAux(MatrizR, MatrizA,X,Y), Res = Y,!.
+revisaMatrizIncorrectosAux([], [],Contador,Res):- Res = Contador,!.
+revisaMatrizIncorrectosAux([HR|TR],[HA|TA],Contador,Res):- revisaListaIncorrectos(HR,HA,X), ContadorNuevo is Contador + X, revisaMatrizIncorrectosAux(TR, TA,ContadorNuevo,Res).
+
+%este debe ser llamado para contar incorrectos
+enviadorRevisaMatriz(Matriz,Res):- length(Matriz, X), X == 3, t3x3Res(Y), revisaMatrizIncorrectos(Matriz,Y,Z),Res = Z,!.
+enviadorRevisaMatriz(Matriz,Res):- length(Matriz, X), X == 4, t4x4Res(Y), revisaMatrizIncorrectos(Matriz,Y,Z),Res = Z,!.
+enviadorRevisaMatriz(Matriz,Res):- length(Matriz, X), X == 5, t5x5Res(Y), revisaMatrizIncorrectos(Matriz,Y,Z),Res = Z,!.
+enviadorRevisaMatriz(Matriz,Res):- length(Matriz, X), X == 9, t9x9Res(Y), revisaMatrizIncorrectos(Matriz,Y,Z),Res = Z,!.
+enviadorRevisaMatriz(Matriz,Res):- length(Matriz, X), X == 13, t13x13Res(Y), revisaMatrizIncorrectos(Matriz,Y,Z),Res = Z,!.
+
+/*
+verificador(Matriz):- revisaMatrizVacios(Matriz,X), not(X == 0), write('Le faltan '), write(X), write(' casillas por llenar').
+verificador(Matriz):- enviadorRevisaMatriz(Matriz,X), not(X == 0), write('Hay '), write(X), write(' respuestas incorrectas').
+verificador(Matriz):- revisaMatrizVacios(Matriz,X), X == 0, enviadorRevisaMatriz(Matriz,Y), Y == 0, write('Felicidades ganó').
+*/
