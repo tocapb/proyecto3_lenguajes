@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import javax.swing.table.DefaultTableModel;
 import org.jpl7.Query;
 import java.util.*;
@@ -57,6 +58,8 @@ public class vista extends javax.swing.JFrame {
         boton_kakuro_4x4 = new javax.swing.JButton();
         boton_kakuro_5x5 = new javax.swing.JButton();
         boton_verificar = new javax.swing.JButton();
+        num_sugerencias = new javax.swing.JTextField();
+        boton_sugerencias = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -197,6 +200,23 @@ public class vista extends javax.swing.JFrame {
         });
         getContentPane().add(boton_verificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 440, 150, -1));
 
+        num_sugerencias.setEditable(false);
+        num_sugerencias.setText("(5)");
+        num_sugerencias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                num_sugerenciasActionPerformed(evt);
+            }
+        });
+        getContentPane().add(num_sugerencias, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 450, -1, 30));
+
+        boton_sugerencias.setText("Sugerencias");
+        boton_sugerencias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_sugerenciasActionPerformed(evt);
+            }
+        });
+        getContentPane().add(boton_sugerencias, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 450, -1, -1));
+
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo.png"))); // NOI18N
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1100, 600));
 
@@ -205,19 +225,45 @@ public class vista extends javax.swing.JFrame {
 
     private void boton_limpiar_tableroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_limpiar_tableroActionPerformed
 
-            for(int i=0; i< tabla_principal.getColumnCount(); i++){
-                for(int h=0; h< tabla_principal.getRowCount(); h++){
-                    if(tabla_principal.getValueAt(i,h).equals("1") || tabla_principal.getValueAt(i,h).equals("2") || tabla_principal.getValueAt(i,h).equals("3") || tabla_principal.getValueAt(i,h).equals("4") || tabla_principal.getValueAt(i,h).equals("5") || tabla_principal.getValueAt(i,h).equals("6") || tabla_principal.getValueAt(i,h).equals("7") || tabla_principal.getValueAt(i,h).equals("8") || tabla_principal.getValueAt(i,h).equals("9")){
-                        
-                        tabla_principal.setValueAt(" ",i,h);
-                    }
-                        
-                }
+        if(tabla_principal.getRowCount() == 9){
             
+            int n=9;
+            String [][] tablero= new String[n][n];
+            tablero=this.matrizProlog9x9();
+            this.mostrarMatriz(tablero, n);
+       
+        }
+        else if(tabla_principal.getRowCount() == 3){
+            int n=3;
+            String [][] tablero= new String[n][n];
+            tablero=this.matrizProlog3x3();
+            this.mostrarMatriz(tablero, n);
+       
+        }
+        else if(tabla_principal.getRowCount() == 4){
+            int n=4;
+            String [][] tablero= new String[n][n];
+            tablero=this.matrizProlog4x4();
+            this.mostrarMatriz(tablero, n);
+     
+        }
+        else if(tabla_principal.getRowCount() == 5){
+            int n=5;
+            String [][] tablero= new String[n][n];
+            tablero=this.matrizProlog5x5();
+            this.mostrarMatriz(tablero, n);
+        }
+        
+        else if(tabla_principal.getRowCount() == 13){
             
-            }
+            int n=13;
+            String [][] tablero= new String[n][n];
+            tablero=this.matrizProlog13x13();
+            this.mostrarMatriz(tablero, n);
+       
+        }
     }//GEN-LAST:event_boton_limpiar_tableroActionPerformed
-
+ public int num=5;
     private void tabla_principalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabla_principalMouseClicked
         // TODO add your handling code here:
         int row = tabla_principal.getSelectedRow();
@@ -324,6 +370,8 @@ public class vista extends javax.swing.JFrame {
         String [][] tablero= new String[n][n];
         tablero=this.matrizProlog9x9();
         this.mostrarMatriz(tablero, n);
+        num=5;
+        num_sugerencias.setText("(5)");
     }//GEN-LAST:event_boton_kakuro_9x9ActionPerformed
 
     private void tabla_inserta_coordenadasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabla_inserta_coordenadasMouseClicked
@@ -433,13 +481,17 @@ public class vista extends javax.swing.JFrame {
         String [][] tablero= new String[n][n];
         tablero=this.matrizProlog4x4();
         this.mostrarMatriz(tablero, n);
+        num=5;
+        num_sugerencias.setText("(5)");
     }//GEN-LAST:event_boton_kakuro_4x4ActionPerformed
-
+   
     private void boton_kakuro_3x3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_3x3ActionPerformed
         int n=3;
         String [][] tablero= new String[n][n];
         tablero=this.matrizProlog3x3();
         this.mostrarMatriz(tablero, n);
+        num=5;
+        num_sugerencias.setText("(5)");
     }//GEN-LAST:event_boton_kakuro_3x3ActionPerformed
 
     private void boton_kakuro_5x5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_5x5ActionPerformed
@@ -447,6 +499,8 @@ public class vista extends javax.swing.JFrame {
         String [][] tablero= new String[n][n];
         tablero=this.matrizProlog5x5();
         this.mostrarMatriz(tablero, n);
+        num=5;
+        num_sugerencias.setText("(5)");
     }//GEN-LAST:event_boton_kakuro_5x5ActionPerformed
 
     private void boton_kakuro_13x13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_13x13ActionPerformed
@@ -454,6 +508,8 @@ public class vista extends javax.swing.JFrame {
         String [][] tablero= new String[n][n];
         tablero=this.matrizProlog13x13();
         this.mostrarMatriz(tablero, n);
+        num=5;
+        num_sugerencias.setText("(5)");
     }//GEN-LAST:event_boton_kakuro_13x13ActionPerformed
 
     private void boton_verificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_verificarActionPerformed
@@ -462,6 +518,170 @@ public class vista extends javax.swing.JFrame {
         Query q= new Query(goal);
         System.out.println(q);
     }//GEN-LAST:event_boton_verificarActionPerformed
+
+    private void num_sugerenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_num_sugerenciasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_num_sugerenciasActionPerformed
+   
+    private void boton_sugerenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_sugerenciasActionPerformed
+
+        String num_actual=num_sugerencias.getText().toString();
+        int cantidad_vacios=0;
+        for(int i=0; i< tabla_principal.getColumnCount(); i++){
+            for(int h=0; h< tabla_principal.getRowCount(); h++){
+                if (tabla_principal.getValueAt(i,h).equals(" ")){
+                    cantidad_vacios ++;
+            
+                }
+            }
+        }
+       
+        if (cantidad_vacios < num){
+            num=cantidad_vacios;
+        }
+        else {
+
+            num=num;
+        }
+        if (tabla_principal.getColumnCount() > 0){
+            if (num != 0){
+
+                int cantidad_matriz=tabla_principal.getColumnCount();
+                if (cantidad_matriz == 9){
+                    Random num_aleatorio= new Random();
+                    int row = num_aleatorio.nextInt(9);
+                    int colum = num_aleatorio.nextInt(9);
+
+                    String [][] matriz_buena= new String [9][9];
+                    matriz_buena = this.matrizProlog9x9_res();
+                    String pos_matriz_buena= matriz_buena [row][colum];
+                    while (!tabla_principal.getValueAt(row, colum).equals(" ") && (!pos_matriz_buena.equals("1") || !pos_matriz_buena.equals("2")|| !pos_matriz_buena.equals("3")|| !pos_matriz_buena.equals("4")|| !pos_matriz_buena.equals("5")|| !pos_matriz_buena.equals("6")|| !pos_matriz_buena.equals("7")|| !pos_matriz_buena.equals("8")|| !pos_matriz_buena.equals("9"))){
+                        row = num_aleatorio.nextInt(9);
+                        colum = num_aleatorio.nextInt(9);
+                    }
+                    String valor=matriz_buena [row][colum];
+
+                    tabla_principal.setValueAt(valor, row, colum);
+
+
+                }
+                if (cantidad_matriz == 3){
+                    Random num_aleatorio= new Random();
+                    int row = num_aleatorio.nextInt(3);
+                    int colum = num_aleatorio.nextInt(3);
+
+                    String [][] matriz_buena= new String [3][3];
+                    matriz_buena = this.matrizProlog3x3_res();
+                    String pos_matriz_buena= matriz_buena [row][colum];
+                    while (!tabla_principal.getValueAt(row, colum).equals(" ") && (!pos_matriz_buena.equals("1") || !pos_matriz_buena.equals("2")|| !pos_matriz_buena.equals("3")|| !pos_matriz_buena.equals("4")|| !pos_matriz_buena.equals("5")|| !pos_matriz_buena.equals("6")|| !pos_matriz_buena.equals("7")|| !pos_matriz_buena.equals("8")|| !pos_matriz_buena.equals("9"))){
+                        row = num_aleatorio.nextInt(3);
+                        colum = num_aleatorio.nextInt(3);
+                    }
+                    String valor=matriz_buena [row][colum];
+
+                    tabla_principal.setValueAt(valor, row, colum);
+
+
+                }
+                if (cantidad_matriz == 4){
+                    Random num_aleatorio= new Random();
+                    int row = num_aleatorio.nextInt(4);
+                    int colum = num_aleatorio.nextInt(4);
+
+                    String [][] matriz_buena= new String [4][4];
+                    matriz_buena = this.matrizProlog4x4_res();
+                    String pos_matriz_buena= matriz_buena [row][colum];
+                    while (!tabla_principal.getValueAt(row, colum).equals(" ") && (!pos_matriz_buena.equals("1") || !pos_matriz_buena.equals("2")|| !pos_matriz_buena.equals("3")|| !pos_matriz_buena.equals("4")|| !pos_matriz_buena.equals("5")|| !pos_matriz_buena.equals("6")|| !pos_matriz_buena.equals("7")|| !pos_matriz_buena.equals("8")|| !pos_matriz_buena.equals("9"))){
+                        row = num_aleatorio.nextInt(4);
+                        colum = num_aleatorio.nextInt(4);
+                    }
+                    String valor=matriz_buena [row][colum];
+
+                    tabla_principal.setValueAt(valor, row, colum);
+
+
+                }
+                if (cantidad_matriz == 5){
+                    Random num_aleatorio= new Random();
+                    int row = num_aleatorio.nextInt(5);
+                    int colum = num_aleatorio.nextInt(5);
+
+                    String [][] matriz_buena= new String [5][5];
+                    matriz_buena = this.matrizProlog5x5_res();
+                    String pos_matriz_buena= matriz_buena [row][colum];
+                    while (!tabla_principal.getValueAt(row, colum).equals(" ") && (!pos_matriz_buena.equals("1") || !pos_matriz_buena.equals("2")|| !pos_matriz_buena.equals("3")|| !pos_matriz_buena.equals("4")|| !pos_matriz_buena.equals("5")|| !pos_matriz_buena.equals("6")|| !pos_matriz_buena.equals("7")|| !pos_matriz_buena.equals("8")|| !pos_matriz_buena.equals("9"))){
+                        row = num_aleatorio.nextInt(5);
+                        colum = num_aleatorio.nextInt(5);
+                    }
+                    String valor=matriz_buena [row][colum];
+
+                    tabla_principal.setValueAt(valor, row, colum);
+
+
+                }
+                if (cantidad_matriz == 13){
+                    Random num_aleatorio= new Random();
+                    int row = num_aleatorio.nextInt(13);
+                    int colum = num_aleatorio.nextInt(13);
+
+                    String [][] matriz_buena= new String [13][13];
+                    matriz_buena = this.matrizProlog13x13_res();
+                    String pos_matriz_buena= matriz_buena [row][colum];
+                    while (!tabla_principal.getValueAt(row, colum).equals(" ") && (!pos_matriz_buena.equals("1") || !pos_matriz_buena.equals("2")|| !pos_matriz_buena.equals("3")|| !pos_matriz_buena.equals("4")|| !pos_matriz_buena.equals("5")|| !pos_matriz_buena.equals("6")|| !pos_matriz_buena.equals("7")|| !pos_matriz_buena.equals("8")|| !pos_matriz_buena.equals("9"))){
+                        row = num_aleatorio.nextInt(13);
+                        colum = num_aleatorio.nextInt(13);
+                    }
+                    String valor=matriz_buena [row][colum];
+
+                    tabla_principal.setValueAt(valor, row, colum);
+
+
+                }
+            }
+            if (num_actual.equals("(0)")){
+
+                num_sugerencias.setText("(0)");
+
+            }
+            else if (num == 1 ){
+
+                num =0;
+                num_sugerencias.setText("(0)");
+
+
+            }
+            else if (num == 5 ){
+
+                num--;
+                num_sugerencias.setText("(4)");
+
+            }
+
+            else if (num == 4 ){
+
+                num--;
+                num_sugerencias.setText("(3)");
+
+            }
+            else if (num == 3 ){
+
+                num--;
+                num_sugerencias.setText("(2)");
+
+            }
+            else if (num == 2 ){
+
+                num--;
+                num_sugerencias.setText("(1)");
+
+            }
+        }
+    
+    
+        
+
+    
+    }//GEN-LAST:event_boton_sugerenciasActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1234,9 +1454,14 @@ public class vista extends javax.swing.JFrame {
                    
                     for(int i=0; i< tabla_principal.getColumnCount(); i++){
                         for(int h=0; h< tabla_principal.getRowCount(); h++){
-                        
-                            matriz[i][h]= tabla_principal.getValueAt(i,h).toString();
-                          
+                            if (tabla_principal.getValueAt(i,h).toString().equals(" ")){
+                                
+                                matriz[i][h]= "o";
+                            
+                            }
+                            else{
+                                matriz[i][h]= tabla_principal.getValueAt(i,h).toString();
+                            }
                         }
                         
                     };
@@ -1256,11 +1481,13 @@ public class vista extends javax.swing.JFrame {
     private javax.swing.JButton boton_kakuro_5x5;
     private javax.swing.JButton boton_kakuro_9x9;
     private javax.swing.JButton boton_limpiar_tablero;
+    private javax.swing.JButton boton_sugerencias;
     private javax.swing.JButton boton_verificar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField num_sugerencias;
     private javax.swing.JTable tabla_inserta_coordenadas;
     private javax.swing.JTable tabla_principal;
     // End of variables declaration//GEN-END:variables
