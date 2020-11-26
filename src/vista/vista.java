@@ -6,12 +6,19 @@
 package vista;
 
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import org.jpl7.Query;
 import java.util.*;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.table.TableModel;
+import org.jpl7.Atom;
+import org.jpl7.Compound;
+import org.jpl7.Term;
 
 /**
  *
@@ -37,28 +44,46 @@ public class vista extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        boton_kakuro_9x9 = new javax.swing.JButton();
+        boton_limpiar_tablero = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabla_principal = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabla_inserta_coordenadas = new javax.swing.JTable();
+        boton_inserta_coordenadas = new javax.swing.JButton();
+        boton_kakuro_13x13 = new javax.swing.JButton();
+        boton_kakuro_3x3 = new javax.swing.JButton();
+        boton_kakuro_4x4 = new javax.swing.JButton();
+        boton_kakuro_5x5 = new javax.swing.JButton();
+        boton_verificar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton1.setText("Generar Kakuro");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        boton_kakuro_9x9.setText("Generar Kakuro 9x9");
+        boton_kakuro_9x9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                boton_kakuro_9x9ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, -1, -1));
+        getContentPane().add(boton_kakuro_9x9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 150, -1));
 
-        jTable1 = new javax.swing.JTable(){
-            public boolean isCellEditable(int rowIndex,int colIndex){
+        boton_limpiar_tablero.setText("Limpiar Tablero");
+        boton_limpiar_tablero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_limpiar_tableroActionPerformed(evt);
+            }
+        });
+        getContentPane().add(boton_limpiar_tablero, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 400, 150, -1));
+
+        tabla_principal = new javax.swing.JTable(){
+            public boolean isCellEditable(int row,int colum){
                 return false;
             }
         };
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabla_principal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -66,26 +91,378 @@ public class vista extends javax.swing.JFrame {
 
             }
         ));
-        jTable1.setRowHeight(41);
-        jTable1.getTableHeader().setResizingAllowed(false);
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(jTable1);
+        tabla_principal.setRowHeight(41);
+        tabla_principal.setRowMargin(8);
+        tabla_principal.getTableHeader().setResizingAllowed(false);
+        tabla_principal.getTableHeader().setReorderingAllowed(false);
+        tabla_principal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabla_principalMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tabla_principal);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 60, -1, -1));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 10, 690, 570));
+
+        jLabel1.setBackground(new java.awt.Color(204, 204, 204));
+        jLabel1.setForeground(java.awt.Color.white);
+        jLabel1.setText("Insertar Valor por Coordenadas");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, 210, 20));
+
+        tabla_inserta_coordenadas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null}
+            },
+            new String [] {
+                "Coordenada X", "Coordenada Y", "Valor"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, true, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tabla_inserta_coordenadas.setRowHeight(35);
+        tabla_inserta_coordenadas.getTableHeader().setResizingAllowed(false);
+        tabla_inserta_coordenadas.getTableHeader().setReorderingAllowed(false);
+        tabla_inserta_coordenadas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabla_inserta_coordenadasMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabla_inserta_coordenadas);
+        if (tabla_inserta_coordenadas.getColumnModel().getColumnCount() > 0) {
+            tabla_inserta_coordenadas.getColumnModel().getColumn(0).setResizable(false);
+            tabla_inserta_coordenadas.getColumnModel().getColumn(1).setResizable(false);
+            tabla_inserta_coordenadas.getColumnModel().getColumn(2).setResizable(false);
+        }
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 280, 70));
+
+        boton_inserta_coordenadas.setText("Insertar");
+        boton_inserta_coordenadas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_inserta_coordenadasActionPerformed(evt);
+            }
+        });
+        getContentPane().add(boton_inserta_coordenadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, -1, -1));
+
+        boton_kakuro_13x13.setText("Generar Kakuro 13x13");
+        boton_kakuro_13x13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_kakuro_13x13ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(boton_kakuro_13x13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 180, -1));
+
+        boton_kakuro_3x3.setText("Generar Kakuro 3x3");
+        boton_kakuro_3x3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_kakuro_3x3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(boton_kakuro_3x3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 150, -1));
+
+        boton_kakuro_4x4.setText("Generar Kakuro 4x4");
+        boton_kakuro_4x4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_kakuro_4x4ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(boton_kakuro_4x4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 150, -1));
+
+        boton_kakuro_5x5.setText("Generar Kakuro 5x5");
+        boton_kakuro_5x5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_kakuro_5x5ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(boton_kakuro_5x5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 150, -1));
+
+        boton_verificar.setText("Verificar");
+        boton_verificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_verificarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(boton_verificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 440, 150, -1));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo.png"))); // NOI18N
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 504));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1100, 600));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void boton_limpiar_tableroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_limpiar_tableroActionPerformed
+
+            for(int i=0; i< tabla_principal.getColumnCount(); i++){
+                for(int h=0; h< tabla_principal.getRowCount(); h++){
+                    if(tabla_principal.getValueAt(i,h).equals("1") || tabla_principal.getValueAt(i,h).equals("2") || tabla_principal.getValueAt(i,h).equals("3") || tabla_principal.getValueAt(i,h).equals("4") || tabla_principal.getValueAt(i,h).equals("5") || tabla_principal.getValueAt(i,h).equals("6") || tabla_principal.getValueAt(i,h).equals("7") || tabla_principal.getValueAt(i,h).equals("8") || tabla_principal.getValueAt(i,h).equals("9")){
+                        
+                        tabla_principal.setValueAt(" ",i,h);
+                    }
+                        
+                }
+            
+            
+            }
+    }//GEN-LAST:event_boton_limpiar_tableroActionPerformed
+
+    private void tabla_principalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabla_principalMouseClicked
+        // TODO add your handling code here:
+        int row = tabla_principal.getSelectedRow();
+        int colum = tabla_principal.getSelectedColumn();
+        TableModel modelo= tabla_principal.getModel();
+        
+        if(tabla_principal.getValueAt(row, colum).equals(" ") || tabla_principal.getValueAt(row, colum).equals("1")|| tabla_principal.getValueAt(row, colum).equals("2")|| tabla_principal.getValueAt(row, colum).equals("3")|| tabla_principal.getValueAt(row, colum).equals("4")|| tabla_principal.getValueAt(row, colum).equals("5")|| tabla_principal.getValueAt(row, colum).equals("6")|| tabla_principal.getValueAt(row, colum).equals("7")|| tabla_principal.getValueAt(row, colum).equals("8")|| tabla_principal.getValueAt(row, colum).equals("9") ){
+            
+            
+            JPopupMenu popupmenu= new JPopupMenu();
+        
+            JMenuItem numero_1 = new JMenuItem("1");
+            JMenuItem numero_2 = new JMenuItem("2");
+            JMenuItem numero_3 = new JMenuItem("3");
+            JMenuItem numero_4 = new JMenuItem("4");
+            JMenuItem numero_5 = new JMenuItem("5");
+            JMenuItem numero_6 = new JMenuItem("6");
+            JMenuItem numero_7 = new JMenuItem("7");
+            JMenuItem numero_8 = new JMenuItem("8");
+            JMenuItem numero_9 = new JMenuItem("9");
+            
+            
+
+            numero_1.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    tabla_principal.setValueAt("1", row,colum);
+                }
+            });
+            numero_2.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    tabla_principal.setValueAt("2", row,colum);
+                }
+            });
+            numero_3.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    tabla_principal.setValueAt("3", row,colum);
+                }
+            });
+            numero_4.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    tabla_principal.setValueAt("4", row,colum);
+                }
+            });
+            numero_5.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    tabla_principal.setValueAt("5", row,colum);
+                }
+            });
+            numero_6.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    tabla_principal.setValueAt("6", row,colum);
+                }
+            });
+            numero_7.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    tabla_principal.setValueAt("7", row,colum);
+                }
+            });
+            numero_8.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    tabla_principal.setValueAt("8", row,colum);
+                }
+            });
+            numero_9.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    tabla_principal.setValueAt("9", row,colum);
+                }
+            });
+            popupmenu.add(numero_1);
+            popupmenu.add(numero_2);
+            popupmenu.add(numero_3);
+            popupmenu.add(numero_4);
+            popupmenu.add(numero_5);
+            popupmenu.add(numero_6);
+            popupmenu.add(numero_7);
+            popupmenu.add(numero_8);
+            popupmenu.add(numero_9);
+            tabla_principal.setComponentPopupMenu(popupmenu);
+            
+      
+        }
+        else{
+        
+            JPopupMenu popupmenu= new JPopupMenu();
+            tabla_principal.setComponentPopupMenu(popupmenu);
+            
+        }
+
+        
+    }//GEN-LAST:event_tabla_principalMouseClicked
+
+    private void boton_kakuro_9x9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_9x9ActionPerformed
+        // TODO add your handling code here:
         int n=9;
         String [][] tablero= new String[n][n];
-        tablero=this.matrizProlog();
+        tablero=this.matrizProlog9x9();
         this.mostrarMatriz(tablero, n);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_boton_kakuro_9x9ActionPerformed
 
+    private void tabla_inserta_coordenadasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabla_inserta_coordenadasMouseClicked
+        // TODO add your handling code here:
+        int row = tabla_inserta_coordenadas.getSelectedRow();
+        int colum = tabla_inserta_coordenadas.getSelectedColumn();
+   
+        JPopupMenu popupmenu2= new JPopupMenu();
+
+        JMenuItem numero_1_v2 = new JMenuItem("1");
+        JMenuItem numero_2_v2 = new JMenuItem("2");
+        JMenuItem numero_3_v2 = new JMenuItem("3");
+        JMenuItem numero_4_v2 = new JMenuItem("4");
+        JMenuItem numero_5_v2 = new JMenuItem("5");
+        JMenuItem numero_6_v2 = new JMenuItem("6");
+        JMenuItem numero_7_v2 = new JMenuItem("7");
+        JMenuItem numero_8_v2 = new JMenuItem("8");
+        JMenuItem numero_9_v2 = new JMenuItem("9");
+
+
+
+        numero_1_v2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                tabla_inserta_coordenadas.setValueAt("1", row,colum);
+            }
+        });
+        numero_2_v2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                tabla_inserta_coordenadas.setValueAt("2", row,colum);
+            }
+        });
+        numero_3_v2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                tabla_inserta_coordenadas.setValueAt("3", row,colum);
+            }
+        });
+        numero_4_v2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                tabla_inserta_coordenadas.setValueAt("4", row,colum);
+            }
+        });
+        numero_5_v2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                tabla_inserta_coordenadas.setValueAt("5", row,colum);
+            }
+        });
+        numero_6_v2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                tabla_inserta_coordenadas.setValueAt("6", row,colum);
+            }
+        });
+        numero_7_v2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                tabla_inserta_coordenadas.setValueAt("7", row,colum);
+            }
+        });
+        numero_8_v2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                tabla_inserta_coordenadas.setValueAt("8", row,colum);
+            }
+        });
+        numero_9_v2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                tabla_inserta_coordenadas.setValueAt("9", row,colum);
+            }
+        });
+        popupmenu2.add(numero_1_v2);
+        popupmenu2.add(numero_2_v2);
+        popupmenu2.add(numero_3_v2);
+        popupmenu2.add(numero_4_v2);
+        popupmenu2.add(numero_5_v2);
+        popupmenu2.add(numero_6_v2);
+        popupmenu2.add(numero_7_v2);
+        popupmenu2.add(numero_8_v2);
+        popupmenu2.add(numero_9_v2);
+        tabla_inserta_coordenadas.setComponentPopupMenu(popupmenu2);
+            
+      
+            
+        
+
+    }//GEN-LAST:event_tabla_inserta_coordenadasMouseClicked
+
+    private void boton_inserta_coordenadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_inserta_coordenadasActionPerformed
+        // TODO add your handling code here:
+        String verifica_pos = tabla_principal.getValueAt(Integer.parseInt(tabla_inserta_coordenadas.getValueAt(0,1).toString())-1,Integer.parseInt(tabla_inserta_coordenadas.getValueAt(0,0).toString())-1).toString();
+        if (verifica_pos.equals(" ") || verifica_pos.equals("1") || verifica_pos.equals("2") || verifica_pos.equals("3") || verifica_pos.equals("4") || verifica_pos.equals("5") || verifica_pos.equals("6") || verifica_pos.equals("7") || verifica_pos.equals("8") || verifica_pos.equals("9") ){
+            tabla_principal.setValueAt(tabla_inserta_coordenadas.getValueAt(0,2).toString(), Integer.parseInt(tabla_inserta_coordenadas.getValueAt(0,1).toString())-1,Integer.parseInt(tabla_inserta_coordenadas.getValueAt(0,0).toString())-1);
+        
+        }
+        
+        
+        
+    }//GEN-LAST:event_boton_inserta_coordenadasActionPerformed
+
+    private void boton_kakuro_4x4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_4x4ActionPerformed
+        int n=4;
+        String [][] tablero= new String[n][n];
+        tablero=this.matrizProlog4x4();
+        this.mostrarMatriz(tablero, n);
+    }//GEN-LAST:event_boton_kakuro_4x4ActionPerformed
+
+    private void boton_kakuro_3x3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_3x3ActionPerformed
+        int n=3;
+        String [][] tablero= new String[n][n];
+        tablero=this.matrizProlog3x3();
+        this.mostrarMatriz(tablero, n);
+    }//GEN-LAST:event_boton_kakuro_3x3ActionPerformed
+
+    private void boton_kakuro_5x5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_5x5ActionPerformed
+        int n=5;
+        String [][] tablero= new String[n][n];
+        tablero=this.matrizProlog5x5();
+        this.mostrarMatriz(tablero, n);
+    }//GEN-LAST:event_boton_kakuro_5x5ActionPerformed
+
+    private void boton_kakuro_13x13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_13x13ActionPerformed
+        int n=13;
+        String [][] tablero= new String[n][n];
+        tablero=this.matrizProlog13x13();
+        this.mostrarMatriz(tablero, n);
+    }//GEN-LAST:event_boton_kakuro_13x13ActionPerformed
+
+    private void boton_verificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_verificarActionPerformed
+        
+        Term goal = new Compound("verifica1", new Term[] {new Atom(Arrays.deepToString(this.verificar_solucion(1)))});
+        Query q= new Query(goal);
+        System.out.println(q);
+    }//GEN-LAST:event_boton_verificarActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -128,26 +505,28 @@ public class vista extends javax.swing.JFrame {
     
     }
         public void mostrarMatriz(String matriz[][], int n){
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.isCellEditable(0, 0);
+        DefaultTableModel model = (DefaultTableModel) tabla_principal.getModel();
+        
         model.setRowCount(n);
         model.setColumnCount(n);
+       
         
             for(int i=0; i<n; i++){
                 for(int j=0; j<n; j++){
-                    jTable1.setValueAt(matriz[i][j], i, j);
+                    tabla_principal.setValueAt(matriz[i][j], i, j);
 
                 }
 
             }
+       
         }
         
-        public String[][] matrizProlog(){
+        public String[][] matrizProlog9x9(){
             String t1= "consult('board.pl')";
             Query q1= new Query(t1);
             System.out.println(t1+""+(q1.hasSolution()? "satisfactoria":"insatisfactoria"));
 
-            String t2="tablero(Tablero)";
+            String t2="t9x9(Tablero)";
             Query q2 = new Query(t2);
 
             String accion = q2.oneSolution().get("Tablero").toString();
@@ -212,12 +591,677 @@ public class vista extends javax.swing.JFrame {
             }
             return matriz;
         }
+        public String[][] matrizProlog9x9_res(){
+            String t1= "consult('board.pl')";
+            Query q1= new Query(t1);
+            System.out.println(t1+""+(q1.hasSolution()? "satisfactoria":"insatisfactoria"));
+
+            String t2="t9x9Res(Tablero)";
+            Query q2 = new Query(t2);
+
+            String accion = q2.oneSolution().get("Tablero").toString();
+            System.out.println(accion);
+            String cadena = accion;
+            List<String> fila = new ArrayList <String>();
+            List<String> fila_completa = new ArrayList <String>();
+            StringTokenizer st = new StringTokenizer(cadena, "[,\']");
+            while(st.hasMoreTokens()){
+                
+                
+                fila.add(st.nextToken());
+                
+               
+            }
+            Iterator it = fila.iterator();
+            int i=0;
+            while(it.hasNext()){
+                if (it.next().equals(" ")){
+                    it.remove();
+                }
+                
+                i++;
+            }
+                
+            
+            for(i=0; i< fila.size();i++){
+            
+                if(fila.get(i).charAt(0) == '('){
+                    fila_completa.add(fila.get(i).concat(",").concat(fila.get(i+1)));
+                    i++;
+                
+                }
+                else
+                    fila_completa.add(fila.get(i).concat(" "));
+            
+            
+            }
+            String [][] matriz= new String [9][9];
+            int h=0;
+            int j=0;
+            for (i=0; i< fila_completa.size(); i++){
+                if (j<9 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else if (j<9 && fila_completa.get(i).charAt(1) != '_'){
+                    matriz [h][j] = fila_completa.get(i);
+                    j++;
+                }
+                else if (j>=9 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else{
+                    j=0;
+                    h++;
+                    matriz[h][j] = fila_completa.get(i);
+                    j++;
+                    
+                }
+            }
+            return matriz;
+        }
+         
+        public String[][] matrizProlog3x3(){
+            String t1= "consult('board.pl')";
+            Query q1= new Query(t1);
+            System.out.println(t1+""+(q1.hasSolution()? "satisfactoria":"insatisfactoria"));
+
+            String t2="t3x3(Tablero)";
+            Query q2 = new Query(t2);
+
+            String accion = q2.oneSolution().get("Tablero").toString();
+            System.out.println(accion);
+            String cadena = accion;
+            List<String> fila = new ArrayList <String>();
+            List<String> fila_completa = new ArrayList <String>();
+            StringTokenizer st = new StringTokenizer(cadena, "[,\']");
+            while(st.hasMoreTokens()){
+                
+                
+                fila.add(st.nextToken());
+                
+               
+            }
+            Iterator it = fila.iterator();
+            int i=0;
+            while(it.hasNext()){
+                if (it.next().equals(" ")){
+                    it.remove();
+                }
+                
+                i++;
+            }
+                
+            
+            for(i=0; i< fila.size();i++){
+            
+                if(fila.get(i).charAt(0) == '('){
+                    fila_completa.add(fila.get(i).concat(",").concat(fila.get(i+1)));
+                    i++;
+                
+                }
+                else
+                    fila_completa.add(fila.get(i).concat(" "));
+            
+            
+            }
+            String [][] matriz= new String [9][9];
+            int h=0;
+            int j=0;
+            for (i=0; i< fila_completa.size(); i++){
+                if (j<3 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else if (j<3 && fila_completa.get(i).charAt(1) != '_'){
+                    matriz [h][j] = fila_completa.get(i);
+                    j++;
+                }
+                else if (j>=3 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else{
+                    j=0;
+                    h++;
+                    matriz[h][j] = fila_completa.get(i);
+                    j++;
+                    
+                }
+            }
+            return matriz;
+        }
+        public String[][] matrizProlog3x3_res(){
+            String t1= "consult('board.pl')";
+            Query q1= new Query(t1);
+            System.out.println(t1+""+(q1.hasSolution()? "satisfactoria":"insatisfactoria"));
+
+            String t2="t3x3Res(Tablero)";
+            Query q2 = new Query(t2);
+
+            String accion = q2.oneSolution().get("Tablero").toString();
+            System.out.println(accion);
+            String cadena = accion;
+            List<String> fila = new ArrayList <String>();
+            List<String> fila_completa = new ArrayList <String>();
+            StringTokenizer st = new StringTokenizer(cadena, "[,\']");
+            while(st.hasMoreTokens()){
+                
+                
+                fila.add(st.nextToken());
+                
+               
+            }
+            Iterator it = fila.iterator();
+            int i=0;
+            while(it.hasNext()){
+                if (it.next().equals(" ")){
+                    it.remove();
+                }
+                
+                i++;
+            }
+                
+            
+            for(i=0; i< fila.size();i++){
+            
+                if(fila.get(i).charAt(0) == '('){
+                    fila_completa.add(fila.get(i).concat(",").concat(fila.get(i+1)));
+                    i++;
+                
+                }
+                else
+                    fila_completa.add(fila.get(i).concat(" "));
+            
+            
+            }
+            String [][] matriz= new String [9][9];
+            int h=0;
+            int j=0;
+            for (i=0; i< fila_completa.size(); i++){
+                if (j<3 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else if (j<3 && fila_completa.get(i).charAt(1) != '_'){
+                    matriz [h][j] = fila_completa.get(i);
+                    j++;
+                }
+                else if (j>=3 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else{
+                    j=0;
+                    h++;
+                    matriz[h][j] = fila_completa.get(i);
+                    j++;
+                    
+                }
+            }
+            return matriz;
+        }
+        
+        public String[][] matrizProlog4x4(){
+            String t1= "consult('board.pl')";
+            Query q1= new Query(t1);
+            System.out.println(t1+""+(q1.hasSolution()? "satisfactoria":"insatisfactoria"));
+
+            String t2="t4x4(Tablero)";
+            Query q2 = new Query(t2);
+
+            String accion = q2.oneSolution().get("Tablero").toString();
+            System.out.println(accion);
+            String cadena = accion;
+            List<String> fila = new ArrayList <String>();
+            List<String> fila_completa = new ArrayList <String>();
+            StringTokenizer st = new StringTokenizer(cadena, "[,\']");
+            while(st.hasMoreTokens()){
+                
+                
+                fila.add(st.nextToken());
+                
+               
+            }
+            Iterator it = fila.iterator();
+            int i=0;
+            while(it.hasNext()){
+                if (it.next().equals(" ")){
+                    it.remove();
+                }
+                
+                i++;
+            }
+                
+            
+            for(i=0; i< fila.size();i++){
+            
+                if(fila.get(i).charAt(0) == '('){
+                    fila_completa.add(fila.get(i).concat(",").concat(fila.get(i+1)));
+                    i++;
+                
+                }
+                else
+                    fila_completa.add(fila.get(i).concat(" "));
+            
+            
+            }
+            String [][] matriz= new String [9][9];
+            int h=0;
+            int j=0;
+            for (i=0; i< fila_completa.size(); i++){
+                if (j<4 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else if (j<4 && fila_completa.get(i).charAt(1) != '_'){
+                    matriz [h][j] = fila_completa.get(i);
+                    j++;
+                }
+                else if (j>=4 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else{
+                    j=0;
+                    h++;
+                    matriz[h][j] = fila_completa.get(i);
+                    j++;
+                    
+                }
+            }
+            return matriz;
+        }
+        public String[][] matrizProlog4x4_res(){
+            String t1= "consult('board.pl')";
+            Query q1= new Query(t1);
+            System.out.println(t1+""+(q1.hasSolution()? "satisfactoria":"insatisfactoria"));
+
+            String t2="t4x4Res(Tablero)";
+            Query q2 = new Query(t2);
+
+            String accion = q2.oneSolution().get("Tablero").toString();
+            System.out.println(accion);
+            String cadena = accion;
+            List<String> fila = new ArrayList <String>();
+            List<String> fila_completa = new ArrayList <String>();
+            StringTokenizer st = new StringTokenizer(cadena, "[,\']");
+            while(st.hasMoreTokens()){
+                
+                
+                fila.add(st.nextToken());
+                
+               
+            }
+            Iterator it = fila.iterator();
+            int i=0;
+            while(it.hasNext()){
+                if (it.next().equals(" ")){
+                    it.remove();
+                }
+                
+                i++;
+            }
+                
+            
+            for(i=0; i< fila.size();i++){
+            
+                if(fila.get(i).charAt(0) == '('){
+                    fila_completa.add(fila.get(i).concat(",").concat(fila.get(i+1)));
+                    i++;
+                
+                }
+                else
+                    fila_completa.add(fila.get(i).concat(" "));
+            
+            
+            }
+            String [][] matriz= new String [9][9];
+            int h=0;
+            int j=0;
+            for (i=0; i< fila_completa.size(); i++){
+                if (j<4 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else if (j<4 && fila_completa.get(i).charAt(1) != '_'){
+                    matriz [h][j] = fila_completa.get(i);
+                    j++;
+                }
+                else if (j>=4 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else{
+                    j=0;
+                    h++;
+                    matriz[h][j] = fila_completa.get(i);
+                    j++;
+                    
+                }
+            }
+            return matriz;
+        }
+        
+        public String[][] matrizProlog5x5(){
+            String t1= "consult('board.pl')";
+            Query q1= new Query(t1);
+            System.out.println(t1+""+(q1.hasSolution()? "satisfactoria":"insatisfactoria"));
+
+            String t2="t5x5(Tablero)";
+            Query q2 = new Query(t2);
+
+            String accion = q2.oneSolution().get("Tablero").toString();
+            System.out.println(accion);
+            String cadena = accion;
+            List<String> fila = new ArrayList <String>();
+            List<String> fila_completa = new ArrayList <String>();
+            StringTokenizer st = new StringTokenizer(cadena, "[,\']");
+            while(st.hasMoreTokens()){
+                
+                
+                fila.add(st.nextToken());
+                
+               
+            }
+            Iterator it = fila.iterator();
+            int i=0;
+            while(it.hasNext()){
+                if (it.next().equals(" ")){
+                    it.remove();
+                }
+                
+                i++;
+            }
+                
+            
+            for(i=0; i< fila.size();i++){
+            
+                if(fila.get(i).charAt(0) == '('){
+                    fila_completa.add(fila.get(i).concat(",").concat(fila.get(i+1)));
+                    i++;
+                
+                }
+                else
+                    fila_completa.add(fila.get(i).concat(" "));
+            
+            
+            }
+            String [][] matriz= new String [9][9];
+            int h=0;
+            int j=0;
+            for (i=0; i< fila_completa.size(); i++){
+                if (j<5 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else if (j<5 && fila_completa.get(i).charAt(1) != '_'){
+                    matriz [h][j] = fila_completa.get(i);
+                    j++;
+                }
+                else if (j>=5 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else{
+                    j=0;
+                    h++;
+                    matriz[h][j] = fila_completa.get(i);
+                    j++;
+                    
+                }
+            }
+            return matriz;
+        }
+        public String[][] matrizProlog5x5_res(){
+            String t1= "consult('board.pl')";
+            Query q1= new Query(t1);
+            System.out.println(t1+""+(q1.hasSolution()? "satisfactoria":"insatisfactoria"));
+
+            String t2="t5x5Res(Tablero)";
+            Query q2 = new Query(t2);
+
+            String accion = q2.oneSolution().get("Tablero").toString();
+            System.out.println(accion);
+            String cadena = accion;
+            List<String> fila = new ArrayList <String>();
+            List<String> fila_completa = new ArrayList <String>();
+            StringTokenizer st = new StringTokenizer(cadena, "[,\']");
+            while(st.hasMoreTokens()){
+                
+                
+                fila.add(st.nextToken());
+                
+               
+            }
+            Iterator it = fila.iterator();
+            int i=0;
+            while(it.hasNext()){
+                if (it.next().equals(" ")){
+                    it.remove();
+                }
+                
+                i++;
+            }
+                
+            
+            for(i=0; i< fila.size();i++){
+            
+                if(fila.get(i).charAt(0) == '('){
+                    fila_completa.add(fila.get(i).concat(",").concat(fila.get(i+1)));
+                    i++;
+                
+                }
+                else
+                    fila_completa.add(fila.get(i).concat(" "));
+            
+            
+            }
+            String [][] matriz= new String [9][9];
+            int h=0;
+            int j=0;
+            for (i=0; i< fila_completa.size(); i++){
+                if (j<5 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else if (j<5 && fila_completa.get(i).charAt(1) != '_'){
+                    matriz [h][j] = fila_completa.get(i);
+                    j++;
+                }
+                else if (j>=5 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else{
+                    j=0;
+                    h++;
+                    matriz[h][j] = fila_completa.get(i);
+                    j++;
+                    
+                }
+            }
+            return matriz;
+        }
+        
+        public String[][] matrizProlog13x13(){
+            String t1= "consult('board.pl')";
+            Query q1= new Query(t1);
+            System.out.println(t1+""+(q1.hasSolution()? "satisfactoria":"insatisfactoria"));
+
+            String t2="t13x13(Tablero)";
+            Query q2 = new Query(t2);
+
+            String accion = q2.oneSolution().get("Tablero").toString();
+            System.out.println(accion);
+            String cadena = accion;
+            List<String> fila = new ArrayList <String>();
+            List<String> fila_completa = new ArrayList <String>();
+            StringTokenizer st = new StringTokenizer(cadena, "[,\']");
+            while(st.hasMoreTokens()){
+                
+                
+                fila.add(st.nextToken());
+                
+               
+            }
+            Iterator it = fila.iterator();
+            int i=0;
+            while(it.hasNext()){
+                if (it.next().equals(" ")){
+                    it.remove();
+                }
+                
+                i++;
+            }
+                
+            
+            for(i=0; i< fila.size();i++){
+            
+                if(fila.get(i).charAt(0) == '('){
+                    fila_completa.add(fila.get(i).concat(",").concat(fila.get(i+1)));
+                    i++;
+                
+                }
+                else
+                    fila_completa.add(fila.get(i).concat(" "));
+            
+            
+            }
+            String [][] matriz= new String [13][13];
+            int h=0;
+            int j=0;
+            for (i=0; i< fila_completa.size(); i++){
+                if (j<13 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else if (j<13 && fila_completa.get(i).charAt(1) != '_'){
+                    matriz [h][j] = fila_completa.get(i);
+                    j++;
+                }
+                else if (j>=13 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else{
+                    j=0;
+                    h++;
+                    matriz[h][j] = fila_completa.get(i);
+                    j++;
+                    
+                }
+            }
+            return matriz;
+        }
+        public String[][] matrizProlog13x13_res(){
+            String t1= "consult('board.pl')";
+            Query q1= new Query(t1);
+            System.out.println(t1+""+(q1.hasSolution()? "satisfactoria":"insatisfactoria"));
+
+            String t2="t13x13Res(Tablero)";
+            Query q2 = new Query(t2);
+
+            String accion = q2.oneSolution().get("Tablero").toString();
+            System.out.println(accion);
+            String cadena = accion;
+            List<String> fila = new ArrayList <String>();
+            List<String> fila_completa = new ArrayList <String>();
+            StringTokenizer st = new StringTokenizer(cadena, "[,\']");
+            while(st.hasMoreTokens()){
+                
+                
+                fila.add(st.nextToken());
+                
+               
+            }
+            Iterator it = fila.iterator();
+            int i=0;
+            while(it.hasNext()){
+                if (it.next().equals(" ")){
+                    it.remove();
+                }
+                
+                i++;
+            }
+                
+            
+            for(i=0; i< fila.size();i++){
+            
+                if(fila.get(i).charAt(0) == '('){
+                    fila_completa.add(fila.get(i).concat(",").concat(fila.get(i+1)));
+                    i++;
+                
+                }
+                else
+                    fila_completa.add(fila.get(i).concat(" "));
+            
+            
+            }
+            String [][] matriz= new String [13][13];
+            int h=0;
+            int j=0;
+            for (i=0; i< fila_completa.size(); i++){
+                if (j<13 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else if (j<13 && fila_completa.get(i).charAt(1) != '_'){
+                    matriz [h][j] = fila_completa.get(i);
+                    j++;
+                }
+                else if (j>=13 && fila_completa.get(i).charAt(1) == '_'){
+                    matriz [h][j] = " ";
+                    j++;
+                }
+                else{
+                    j=0;
+                    h++;
+                    matriz[h][j] = fila_completa.get(i);
+                    j++;
+                    
+                }
+            }
+            return matriz;
+        }
+        
+        public String [][] verificar_solucion(int x){
+            String [][] matriz = new String[tabla_principal.getColumnCount()][tabla_principal.getRowCount()];
+            
+            switch(x){
+                case 1:
+                   
+                    for(int i=0; i< tabla_principal.getColumnCount(); i++){
+                        for(int h=0; h< tabla_principal.getRowCount(); h++){
+                        
+                            matriz[i][h]= tabla_principal.getValueAt(i,h).toString();
+                          
+                        }
+                        
+                    };
+                    return matriz;
+                default:
+                    return matriz;
+            }
+            
+        }
         
         
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton boton_inserta_coordenadas;
+    private javax.swing.JButton boton_kakuro_13x13;
+    private javax.swing.JButton boton_kakuro_3x3;
+    private javax.swing.JButton boton_kakuro_4x4;
+    private javax.swing.JButton boton_kakuro_5x5;
+    private javax.swing.JButton boton_kakuro_9x9;
+    private javax.swing.JButton boton_limpiar_tablero;
+    private javax.swing.JButton boton_verificar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tabla_inserta_coordenadas;
+    private javax.swing.JTable tabla_principal;
     // End of variables declaration//GEN-END:variables
 }
