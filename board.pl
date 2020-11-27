@@ -1,3 +1,4 @@
+:- use_module(library(random)).    
 
 %Tablero de dimensiones 9x9
 t9x9([
@@ -101,37 +102,110 @@ t13x13Res([
              [(x,19)  , 9      , 2      , 8      , x      , (x,11) , 2      , 9      , x      , x      , x      , x      , x      ],
              [(x,17)  , 7      , 1      , 9      , x      , x      , x      , x      , x      , x      , x      , x      , x      ]
         ]).
-        
-
+/*
+Entradas: Campo en memoria para la salida
+Salidas: Un número aleatorio del 1 al 4
+Funcionalidad: Simplemente saca un número aleatorio
+*/
 indicaX(Res):- random(1,5,Res).
+
+/*
+Entradas: Campo en memoria para la salida
+Salidas: Un número aleatorio del 1 al 9
+Funcionalidad: Simplemente saca un número aleatorio
+*/
 sacaNumero(Res):- random(1,10,Res).
 
+/*
+Entradas: Un entero y campo en memoria para la salida
+Salidas: Una lista con x y o
+Funcionalidad: Se encarga de enviar los datos a su auxiliar
+*/
 creaLista(NumeroCasillas, Res):- Lista = [], creaListaAux(Lista,NumeroCasillas,X),append(Lista,X,Res), !.
+
+/*
+Entradas: Un entero,Una lista y campo en memoria para la salida
+Salidas: Una lista con x y o
+Funcionalidad: Se encarga de utilizar números aleatorios para ver si introducir una x o un o
+*/
 creaListaAux(Lista,Ncasillas,Res):- Ncasillas == 0,Res = Lista, !.
 creaListaAux(Lista,Ncasillas,Res):- indicaX(X), X == 1, append(Lista,[x],ListaNueva), N is Ncasillas-1, creaListaAux(ListaNueva,N,Res).
 creaListaAux(Lista,Ncasillas,Res):- append(Lista,[o],ListaNueva), N is Ncasillas-1, creaListaAux(ListaNueva,N,Res).
 
+/*
+Entradas: Dos enteros y un campo en memoria para la salida
+Salidas: Una matriz con numeros y x aleatorios
+Funcionalidad: Se encarga de llamar a su auxiliar
+*/
 creaMatriz(NumeroFilas,NumeroColumnas,Res):- Matriz = [], creaMatrizAux(Matriz,NumeroFilas,NumeroColumnas,X),append(Matriz,X,Res),!.
+
+/*
+Entradas: Dos enteros,una matriz y campo en memoria para la salida
+Salidas: Una matriz con numeros y x aleatorios
+Funcionalidad: Se encarga de llamar a crea lista y de llamar a la función que introduce número, al final inserta todo en una matriz
+*/
 creaMatrizAux(Matriz,NumeroFilas,NumeroColumnas,Res):- NumeroFilas == 0, Res = Matriz, !.
 creaMatrizAux(Matriz,NumeroFilas,NumeroColumnas,Res):- creaLista(NumeroColumnas, X),meteNumeros(X,Y), append(Matriz,[Y],MatrizNueva), N is NumeroFilas-1, creaMatrizAux(MatrizNueva,N,NumeroColumnas,Res).
 
+/*
+Entradas: Una lista y un campo en memoria para la salida
+Salidas: Una lista con x y numeros
+Funcionalidad: Se encarga de llamar a su auxiliar
+*/
 meteNumeros(Lista,Res):-ListaNueva = [], meteNumerosAux(ListaNueva,Lista,X),append(ListaNueva,X,Res),!.
+
+/*
+Entradas: Dos listas y un campo en memoria para la salida
+Salidas: Una lista con x y numeros
+Funcionalidad: Se encarga de recorrer la lista e introducir números donde no haya x
+*/
 meteNumerosAux(Lista,[],Res):- Res = Lista,!.
 meteNumerosAux(Lista,[H|T],Res):- H == x, append(Lista,[x],ListaNueva), meteNumerosAux(ListaNueva,T,Res).
 meteNumerosAux(Lista,[H|T],Res):- sacaNumero(X),append(Lista,[X],ListaNueva), meteNumerosAux(ListaNueva,T,Res).
 
-%para revisar matriz
+/*
+Entradas: Una lista y un campo en memoria para la salida
+Salidas: Un entero
+Funcionalidad: Se encarga de llamar a su auxiliar
+*/
 revisaListaVacios(Lista,Res):- X = 0, revisaListaVaciosAux(Lista,X,Y), Res = Y,!.
+
+/*
+Entradas: Una lista, un entero y un campo en memoria para la salida
+Salidas: Un entero
+Funcionalidad: Se encarga de contar la cantidad de o almacenadas en la lista
+*/
 revisaListaVaciosAux([],Contador,Res):- Res = Contador,!.
 revisaListaVaciosAux([H|T],Contador,Res):- H == o, ContadorNuevo is Contador + 1, revisaListaVaciosAux(T,ContadorNuevo,Res).
 revisaListaVaciosAux([H|T],Contador,Res):- revisaListaVaciosAux(T,Contador,Res).
 
-%este debe ser llamado para contar faltantes
+/*
+Entradas: Una matriz y un campo en memoria para la salida
+Salidas: Un entero
+Funcionalidad: Se encarga de llamar a su auxiliar
+*/
 revisaMatrizVacios(Matriz,Res):- X = 0, revisaMatrizVaciosAux(Matriz,X,Y), Res = Y,!.
+
+/*
+Entradas: Una matriz, un contador y un campo en memoria para la salida
+Salidas: Un entero
+Funcionalidad: Se encarga de partir la matriz en listas para contar sus elementos y sumar los resultados de todas las listas
+*/
 revisaMatrizVaciosAux([],Contador,Res):- Res = Contador,!.
 revisaMatrizVaciosAux([H|T],Contador,Res):- revisaListaVacios(H,X), ContadorNuevo is Contador + X, revisaMatrizVaciosAux(T,ContadorNuevo,Res).
 
+/*
+Entradas: Dos listas y un campo en memoria para la salida
+Salidas: Un entero
+Funcionalidad: Se encarga de llamar a su auxiliar
+*/
 revisaListaIncorrectos(ListaR,ListaA,Res):- X = 0, revisaListaIncorrectosAux(ListaR,ListaA,X,Y), Res = Y,!.
+
+/*
+Entradas: Dos listas, un entero y un campo en memoria para la salida
+Salidas: Un entero
+Funcionalidad: Se encarga de verificar casilla por casilla aquellas que no coincidan con la matriz almacenada
+*/
 revisaListaIncorrectosAux([],[],Contador,Res):- Res = Contador,!.
 revisaListaIncorrectosAux([HR|TR],[HA|TA],Contador,Res):- HR == x, revisaListaIncorrectosAux(TR,TA,Contador,Res).
 revisaListaIncorrectosAux([HR|TR],[HA|TA],Contador,Res):- HR == (A,B), revisaListaIncorrectosAux(TR,TA,Contador,Res).
@@ -139,19 +213,22 @@ revisaListaIncorrectosAux([HR|TR],[HA|TA],Contador,Res):- HR == o, revisaListaIn
 revisaListaIncorrectosAux([HR|TR],[HA|TA],Contador,Res):- HR == HA, revisaListaIncorrectosAux(TR,TA,Contador,Res).
 revisaListaIncorrectosAux([HR|TR],[HA|TA],Contador,Res):- ContadorNuevo is Contador + 1, revisaListaIncorrectosAux(TR,TA,ContadorNuevo,Res).
 
+/*
+Entradas: Dos matrices y un campo en memoria para la salida
+Salidas: Un entero
+Funcionalidad: Se encarga de partir la matriz en listas para contar sus elementos y sumar los resultados de todas las listas
+*/
 revisaMatrizIncorrectos(MatrizR,MatrizA,Res):- X = 0, revisaMatrizIncorrectosAux(MatrizR, MatrizA,X,Y), Res = Y,!.
 revisaMatrizIncorrectosAux([], [],Contador,Res):- Res = Contador,!.
 revisaMatrizIncorrectosAux([HR|TR],[HA|TA],Contador,Res):- revisaListaIncorrectos(HR,HA,X), ContadorNuevo is Contador + X, revisaMatrizIncorrectosAux(TR, TA,ContadorNuevo,Res).
 
-%este debe ser llamado para contar incorrectos
+/*
+Entradas: Una matriz y un campo en memoria para la salida
+Salidas: Un entero
+Funcionalidad: Se encarga de verificar cual matriz es la respuesta de cual
+*/
 enviadorRevisaMatriz(Matriz,Res):- length(Matriz, X), X == 3, t3x3Res(Y), revisaMatrizIncorrectos(Matriz,Y,Z),Res = Z,!.
 enviadorRevisaMatriz(Matriz,Res):- length(Matriz, X), X == 4, t4x4Res(Y), revisaMatrizIncorrectos(Matriz,Y,Z),Res = Z,!.
 enviadorRevisaMatriz(Matriz,Res):- length(Matriz, X), X == 5, t5x5Res(Y), revisaMatrizIncorrectos(Matriz,Y,Z),Res = Z,!.
 enviadorRevisaMatriz(Matriz,Res):- length(Matriz, X), X == 9, t9x9Res(Y), revisaMatrizIncorrectos(Matriz,Y,Z),Res = Z,!.
 enviadorRevisaMatriz(Matriz,Res):- length(Matriz, X), X == 13, t13x13Res(Y), revisaMatrizIncorrectos(Matriz,Y,Z),Res = Z,!.
-
-/*
-verificador(Matriz):- revisaMatrizVacios(Matriz,X), not(X == 0), write('Le faltan '), write(X), write(' casillas por llenar').
-verificador(Matriz):- enviadorRevisaMatriz(Matriz,X), not(X == 0), write('Hay '), write(X), write(' respuestas incorrectas').
-verificador(Matriz):- revisaMatrizVacios(Matriz,X), X == 0, enviadorRevisaMatriz(Matriz,Y), Y == 0, write('Felicidades ganó').
-*/
