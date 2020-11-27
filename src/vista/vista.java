@@ -8,12 +8,18 @@ package vista;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javax.swing.table.DefaultTableModel;
 import org.jpl7.Query;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.table.TableModel;
@@ -66,9 +72,13 @@ public class vista extends javax.swing.JFrame {
         text_vacios = new javax.swing.JTextField();
         num_vacios = new javax.swing.JTextField();
         etiquetaTiempo = new javax.swing.JLabel();
+        repeticion = new javax.swing.JButton();
+        boton_estadisticas = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Kakuro");
+        setName("frame"); // NOI18N
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         boton_kakuro_9x9.setText("Generar Kakuro 9x9");
@@ -256,6 +266,22 @@ public class vista extends javax.swing.JFrame {
         etiquetaTiempo.setToolTipText("");
         getContentPane().add(etiquetaTiempo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 530, 140, 40));
 
+        repeticion.setText("Guardar Repetición");
+        repeticion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                repeticionActionPerformed(evt);
+            }
+        });
+        getContentPane().add(repeticion, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 390, 150, -1));
+
+        boton_estadisticas.setText("Estadísticas");
+        boton_estadisticas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_estadisticasActionPerformed(evt);
+            }
+        });
+        getContentPane().add(boton_estadisticas, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 180, 130, -1));
+
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo.png"))); // NOI18N
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1130, 610));
 
@@ -266,6 +292,11 @@ public class vista extends javax.swing.JFrame {
         t.start();
         h=0; m=0; s=0; cs=0;
         actualizarLabel();
+        cantidad_veri=0;
+        autosolucion=false;
+        cantidad_sugerencias=0;
+        num_errores.setText(" ");
+        num_vacios.setText(" ");
         if(tabla_principal.getRowCount() == 9){
             
             int n=9;
@@ -305,6 +336,10 @@ public class vista extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_boton_limpiar_tableroActionPerformed
     private int num=5;
+    private int captura=0;
+    private int cantidad_veri=0;
+    private boolean autosolucion=false;
+    private int cantidad_sugerencias=0;
     private void tabla_principalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabla_principalMouseClicked
         // TODO add your handling code here:
         int row = tabla_principal.getSelectedRow();
@@ -418,8 +453,9 @@ public class vista extends javax.swing.JFrame {
         h=0; m=0; s=0; cs=0;
         actualizarLabel();
         t.start();
-
-        
+        cantidad_veri=0;     
+        autosolucion=false;
+        cantidad_sugerencias=0;
     }//GEN-LAST:event_boton_kakuro_9x9ActionPerformed
 
     private void tabla_inserta_coordenadasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabla_inserta_coordenadasMouseClicked
@@ -536,6 +572,9 @@ public class vista extends javax.swing.JFrame {
         h=0; m=0; s=0; cs=0;
         actualizarLabel();
         t.start();
+        cantidad_veri=0;
+        autosolucion=false;
+        cantidad_sugerencias=0;
     }//GEN-LAST:event_boton_kakuro_4x4ActionPerformed
    
     private void boton_kakuro_3x3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_3x3ActionPerformed
@@ -550,6 +589,8 @@ public class vista extends javax.swing.JFrame {
         h=0; m=0; s=0; cs=0;
         actualizarLabel();
         t.start();
+        autosolucion=false;
+        cantidad_sugerencias=0;
     }//GEN-LAST:event_boton_kakuro_3x3ActionPerformed
 
     private void boton_kakuro_5x5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_5x5ActionPerformed
@@ -564,8 +605,11 @@ public class vista extends javax.swing.JFrame {
         h=0; m=0; s=0; cs=0;
         actualizarLabel();
         t.start();
+        cantidad_veri=0;
+        autosolucion=false;
+        cantidad_sugerencias=0;
     }//GEN-LAST:event_boton_kakuro_5x5ActionPerformed
-
+    
     private void boton_kakuro_13x13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_kakuro_13x13ActionPerformed
         int n=13;
         String [][] tablero= new String[n][n];
@@ -578,10 +622,13 @@ public class vista extends javax.swing.JFrame {
         h=0; m=0; s=0; cs=0;
         actualizarLabel();
         t.start();
+        cantidad_veri=0;
+        autosolucion=false;
+        cantidad_sugerencias=0;
     }//GEN-LAST:event_boton_kakuro_13x13ActionPerformed
 
     private void boton_verificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_verificarActionPerformed
-        System.out.println(tabla_principal.getValueAt(3, 3));
+        cantidad_veri++;
         String t1= "consult('board.pl')";
         Query q1= new Query(t1);
         System.out.println(t1+""+(q1.hasSolution()? "satisfactoria":"insatisfactoria"));
@@ -602,7 +649,7 @@ public class vista extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,"Felicidades!! Juego Completado");
 
         }
-
+        
     }//GEN-LAST:event_boton_verificarActionPerformed
 
     private void num_sugerenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_num_sugerenciasActionPerformed
@@ -631,7 +678,7 @@ public class vista extends javax.swing.JFrame {
         }
         if (tabla_principal.getColumnCount() > 0){
             if (num != 0){
-
+                cantidad_sugerencias++;
                 int cantidad_matriz=tabla_principal.getColumnCount();
                 if (cantidad_matriz == 9){
                     Random num_aleatorio= new Random();
@@ -770,7 +817,7 @@ public class vista extends javax.swing.JFrame {
     }//GEN-LAST:event_boton_sugerenciasActionPerformed
 
     private void boton_solucionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_solucionActionPerformed
-        
+        autosolucion=true;
         int cantidad_matriz=tabla_principal.getColumnCount();
                 if (cantidad_matriz == 9){
                 
@@ -789,7 +836,7 @@ public class vista extends javax.swing.JFrame {
                 }
                 if (cantidad_matriz == 4){
                     
-                    int n=3;
+                    int n=4;
                     String [][] tablero= new String[n][n];
                     tablero=this.matrizProlog4x4_res();
                     this.mostrarMatriz(tablero, n);
@@ -816,6 +863,24 @@ public class vista extends javax.swing.JFrame {
     private void text_erroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text_erroresActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_text_erroresActionPerformed
+
+    private void repeticionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repeticionActionPerformed
+
+        BufferedImage img = new BufferedImage(tabla_principal.getWidth(), tabla_principal.getHeight(), BufferedImage.TYPE_INT_RGB);
+        tabla_principal.paint(img.getGraphics());
+        
+        captura++;
+        File outputfile = new File("ultima_jugada"+captura+".png");
+        try {
+            ImageIO.write(img, "png", outputfile);
+        } catch (IOException ex) {
+            Logger.getLogger(vista.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_repeticionActionPerformed
+
+    private void boton_estadisticasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_estadisticasActionPerformed
+        this.estadisticas();
+    }//GEN-LAST:event_boton_estadisticasActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1636,7 +1701,40 @@ public class vista extends javax.swing.JFrame {
         String tiempo = (h<=9?"0":"")+h+":"+(m<=9?"0":"")+m+":"+(s<=9?"0":"")+s+":"+(cs<=9?"0":"")+cs;
         etiquetaTiempo.setText(tiempo);
     }
+    
+    public void estadisticas(){
+        int cantidad_introducida=0;
+        String estado="";
+        if (num_errores.getText().equals("0") && num_vacios.getText().equals("0")){
+            
+            estado="Exitoso";
+        
+        }
+        else
+        {
+        
+            estado="Abandono(Por Nuevo Juego)";
+        }
+        if (autosolucion == true){
+            estado="Autosolución";
+        
+        }
+        for(int i=0; i< tabla_principal.getColumnCount(); i++){
+            for(int h=0; h< tabla_principal.getRowCount(); h++){
+                if (tabla_principal.getValueAt(i,h).toString().equals("1") || tabla_principal.getValueAt(i,h).toString().equals("2") || tabla_principal.getValueAt(i,h).toString().equals("3")|| tabla_principal.getValueAt(i,h).toString().equals("4")|| tabla_principal.getValueAt(i,h).toString().equals("5")|| tabla_principal.getValueAt(i,h).toString().equals("6")|| tabla_principal.getValueAt(i,h).toString().equals("7")|| tabla_principal.getValueAt(i,h).toString().equals("8")|| tabla_principal.getValueAt(i,h).toString().equals("9")){
+                    cantidad_introducida++;
+                }
+
+            }
+
+        };
+        JOptionPane.showMessageDialog(null," Cantidad de celdas de ingreso de dígitos: "+ cantidad_introducida+"\n Cantidad de verificaciones realizadas: "+ cantidad_veri+"\n Cantidad de errores de verificación: "+num_errores.getText()+"\n Cantidad de sugerencias utilizadas: "+cantidad_sugerencias+"\n Tipo Finalización: "+estado);
+    
+    
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton boton_estadisticas;
     private javax.swing.JButton boton_inserta_coordenadas;
     private javax.swing.JButton boton_kakuro_13x13;
     private javax.swing.JButton boton_kakuro_3x3;
@@ -1655,9 +1753,11 @@ public class vista extends javax.swing.JFrame {
     private javax.swing.JTextField num_errores;
     private javax.swing.JTextField num_sugerencias;
     private javax.swing.JTextField num_vacios;
+    private javax.swing.JButton repeticion;
     private javax.swing.JTable tabla_inserta_coordenadas;
     private javax.swing.JTable tabla_principal;
     private javax.swing.JTextField text_errores;
     private javax.swing.JTextField text_vacios;
     // End of variables declaration//GEN-END:variables
+
 }
