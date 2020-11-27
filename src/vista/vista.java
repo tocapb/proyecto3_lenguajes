@@ -309,6 +309,7 @@ public class vista extends javax.swing.JFrame {
         cantidad_sugerencias=0;
         num_errores.setText(" ");
         num_vacios.setText(" ");
+        num=5;
         if(tabla_principal.getRowCount() == 9){
             
             int n=9;
